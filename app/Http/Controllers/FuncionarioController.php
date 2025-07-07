@@ -34,13 +34,39 @@ class FuncionarioController extends Controller
                 if(!$funcionarioExistente){
                     return redirect()->back()->with("ERRO","FUNCIONARIO NÃO ENCONTRADO");
                 }
+                
+                $rules['email'] = 'required|email|unique:funcionarios,email,'. $request->id;
+                $rules['telefone'] = 'required|digits:9|unique:funcionarios,telefone,'.$request->id;
             }
+
+            //validação 
+            $request->validate($rules);
+
+            //Criar ou editar funcionário
+            $valor = $request->filled('id')
+                ? Funcionario::find($request->id)
+                : new Funcionario();
+                
+                $valor->nome = $request->nome;
+                $valor->telefone = $request->telefone;
+                $valor->endereco = $request->endereco;
+                $valor->email = $request->email;
+                $valor->data_contrato = $request->nome;
+                $valor->n_bilhete = $request->n_bilhete;
+                $valor->funcao = $request->funcao;
+                $valor->senha = Hash::make($request->senha);
+                $valor->save();
+
+                return redirect()->back()->with("SUCESSO",$request->filled('id') ? "FUNCIONARIO ACTUALIZADO COM SUCESSO" : "FUNCIONARIO CADASTRADO COM SUCESSO");
 
 
         } catch (QueryException $e) {
-            //
+            return redirect()->back()->with("ERRO","FUNCIONARIO NÃO ENCONTRADO!");
         }
-
-
     }
+
+    public function destroy(){
+        
+    }
+    
 }
