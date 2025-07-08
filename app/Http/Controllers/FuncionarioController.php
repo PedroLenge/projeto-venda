@@ -67,9 +67,22 @@ class FuncionarioController extends Controller
 
     public function show($id){
 
+        $funcionario = Funcionario::find($id);
+        if(!$funcionario){
+            return redirect()->back()->with("ERRO", "FUNCIONARIO NÃO ENCONTRADO.");
+        }
+        return view('pages.admin.funcionario',compact('funcionario'));
+
     }
 
-    public function destroy(){
+    public function destroy($id){
+
+        $funcionario = Funcionario::find($id);
+        if(!$funcionario){
+            return redirect()->back()->with("ERRO","FUNCIONÁRIO NÃO ENCONTRADO");
+        }
+        $funcionario->delete();
+        return redirect()->back()->with("SUCESSO","FUNCIONÁRIO EXCLUÍDO COM SUCESSO");
         
     }
     
