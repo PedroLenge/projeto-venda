@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class ProdutoController extends Controller
 {
@@ -48,10 +49,29 @@ class ProdutoController extends Controller
 
             //PREENCHER OS CAMPOS DO FORMULÁRIO
             
+            $valor->nome = $request->nome;
+            $valor->descricao = $request->nome;
+            $valor->categoria= $request->nome;
+            $valor->funcionario_id = Auth::guard('funcionario')->user()->id;
+            $valor->save();
+            return redirect()->back()->with("SUCESSO",$request->filled('id') ? "ACTUALIZADO COM SUCESSO" : "CADASTRADO COM SUCESSO");
+        }catch(validectionException $e){
 
-        }catch(){
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        
+        } catch(QueryException){
 
+            return redirect()->back()->with("ERRO","ERRO AO SALVAR PRODUTO,TENTE NOVAMENTE.");
         }
 
     }
+
+    public function show($id){
+        $valor = Produto::find($id)
+        if(!$valor){
+            ret
+        }
+
+    }
+
 }
