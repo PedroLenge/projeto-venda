@@ -67,11 +67,21 @@ class ProdutoController extends Controller
     }
 
     public function show($id){
-        $valor = Produto::find($id)
+        $valor = Produto::find($id);
         if(!$valor){
-            ret
+            return redirect()->back()->with("PRODUTO NÃO ENCONTRADO");
         }
-
+        return view('pages.admin.produto',compact('valor'));
     }
+
+     public function destroy($id){
+
+        $valor = produto::find($id);
+        if(!$valor){
+            return redirect()->back()->with("ERRO","PRODUTO NÃO ENCONTRADO");
+        }
+        $valor->delete();
+        return redirect()->back()->with("SUCESSO","PRODUTO APAGADO COM SUCESSO");
+     }
 
 }
